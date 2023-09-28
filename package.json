@@ -11,11 +11,13 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
-    "nuxt": "^3.7.4"
+    "nuxt": "^3.7.4",
+    "sass": "^1.68.0"
   },
   "dependencies": {
     "d3": "^7.8.5",
     "gsap": "file:gsap-bonus.tgz",
+    "normalize.css": "^8.0.1",
     "topojson-client": "^3.1.0"
   }
 }

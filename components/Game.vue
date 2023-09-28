@@ -2,15 +2,13 @@
 const { $d3 } = useNuxtApp();
 import * as topojson from "topojson-client";
 
-console.log("$d3 :>> ", $d3);
-
 let us = await $d3.json("/us-trimed.json");
 
 const dealViewMinMaxData = [483000, 3234042000];
 
 const color = $d3.scaleLinear(dealViewMinMaxData, $d3.schemePaired);
 
-let width = ref(1000);
+let width = ref(900);
 let height = ref(550);
 
 const svg2 = ref(null);
@@ -25,7 +23,7 @@ onMounted(() => {
 
   svg2.value = $d3
     .create("svg")
-    .attr("viewbox", "0 0 1000 700")
+    .attr("viewbox", "0 0 700 700")
     .style("width", "100%")
     .style("height", "700px");
 
@@ -38,33 +36,29 @@ onMounted(() => {
       return "red";
     })
     .attr("id", function (d, i) {
-      return d.properties.name;
+      return d.id;
     })
     .attr("d", path)
     .attr("stroke", "white")
     .attr("stroke-linejoin", "round")
     .on("click", function (event, d) {
-      console.log(d.properties.name);
-      $d3.select(`#${d.properties.name}`).style("fill", "blue");
+      $d3.select(`#${d.id}`).style("fill", "blue");
     });
 
-  console.log("svg2.value :>> ", svg2.value._groups[0][0]);
+  svg2.value._groups[0][0].classList.add("svg");
 
   document.querySelector(".game").append(svg2.value._groups[0][0]);
 });
 </script>
 
 <template>
-  <section class="game">
-    test
-    {{ width }}
-    {{ height }}
-
-    <!-- <template v-if="svg2">
-      {{ JSON.svg2.value._groups[0][0] }}
-      <svg v-html="svg2._groups[0][0]"></svg
-    ></template> -->
-  </section>
+  <section class="game"></section>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.game {
+  width: 100%;
+  .svg {
+  }
+}
+</style>
