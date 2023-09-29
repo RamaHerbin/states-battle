@@ -1,10 +1,20 @@
-# Nuxt 3 Minimal Starter
+# States Battle
+
+Figma available [HERE](https://www.figma.com/file/kipM6PJKbK3WdtWUDA5PZl/State-Battle-Game?type=design&node-id=3%3A3&mode=dev)
+
+Made with [Aurore Vigneron](https://www.instagram.com/dawn_illu) - Designer
+
+This project was in created in the context of a D3.js's workshop at [Gobelins Paris](https://www.gobelins.fr/) school. Crafted in one day.
+
+WORK STILL IN PROGRESS...
+
+## Nuxt 3 Minimal Starter
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
 https://observablehq.com/@almccon/u-s-map-with-puerto-rico-us-virgin-islands-american-samoa-gua
 
-## Setup
+### Setup
 
 Make sure to install the dependencies:
 
@@ -22,7 +32,7 @@ yarn install
 bun install
 ```
 
-## Development Server
+### Development Server
 
 Start the development server on `http://localhost:3000`:
 
@@ -40,7 +50,7 @@ yarn dev
 bun run dev
 ```
 
-## Production
+### Production
 
 Build the application for production:
 
