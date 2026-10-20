@@ -46,7 +46,7 @@
 	const cells = $derived.by(() => {
 		const out: Partial<Record<StateId, CellState>> = { ...session.draftCells };
 		for (const id of selection) out[id] = 'preview';
-		if (hovered && size !== null && !selection.includes(hovered)) {
+		if (hovered && size !== null && !selection.includes(hovered) && !occupied.has(hovered)) {
 			out[hovered] = acceptable(hovered) ? 'invalid' : 'preview';
 		}
 		return out;
@@ -77,7 +77,10 @@
 		const placing = size;
 		const failed = session.placeTroop(placing, next);
 		error = failed;
-		if (!failed) justPlaced = placing;
+		if (!failed) {
+			justPlaced = placing;
+			hovered = null;
+		}
 	}
 
 	function pick(s: TroopSize) {
@@ -119,7 +122,7 @@
 			<CampBadge camp={session.viewerCamp} size={54} />
 			<span class="sb-placement__camp-name">{fill(fr.placement.campLabel, { camp: campName(session.viewerCamp) })}</span>
 		</div>
-		<h1 id="sb-placement-title" class="sb-placement__title type-screen">{fr.placement.title}</h1>
+		<h1 id="sb-placement-title" class="sb-placement__title type-screen screen-heading" tabindex="-1">{fr.placement.title}</h1>
 		<p class="sb-placement__intro">{fr.placement.intro} {fr.placement.fleet}</p>
 	</header>
 

@@ -98,7 +98,11 @@ export const fr = {
 		noShots: "Aucun tir pour l'instant.",
 		passDeviceTitle: "Passe l'écran à {camp}",
 		passDevice: "Passe l'appareil à ton adversaire.",
-		passDeviceCta: "C'est à toi"
+		passDeviceCta: "C'est à toi",
+		startTitle: '{camp} commence',
+		title: 'Bataille',
+		handoffCta: "Passer l'appareil",
+		tabs: 'Cartes'
 	},
 	end: {
 		win: 'Victoire ! Tu as démasqué les trois troupes ennemies.',

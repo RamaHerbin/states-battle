@@ -1,0 +1,12 @@
+Self-hosted fonts used by States Battle (latin subsets, woff2).
+
+- Karantina (karantina-400-latin.woff2, karantina-700-latin.woff2)
+  Copyright 2020 The Karantina Project Authors (https://github.com/ronykoch/Karantina)
+  Source: https://fonts.google.com/specimen/Karantina
+
+- Khand (khand-400-latin.woff2, khand-500-latin.woff2, khand-600-latin.woff2)
+  Copyright (c) 2014 Indian Type Foundry (info@indiantypefoundry.com)
+  Source: https://fonts.google.com/specimen/Khand
+
+Both fonts are licensed under the SIL Open Font License, Version 1.1.
+Full license text: https://openfontlicense.org

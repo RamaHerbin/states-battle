@@ -3,6 +3,7 @@
 	import type { CellState, StateId, StateInfo } from '$lib/game/types';
 	import type { GeoPermissibleObjects } from 'd3-geo';
 	import { directionOfKey, pickNeighbor, type Point } from './geometry';
+	import { rovingTarget, stateLabel } from './labels';
 
 	/** Structural subset of GeoJSON (the app has no `geojson` types of its own). */
 	interface MapFeature {
@@ -40,18 +41,6 @@
 		onhover
 	}: Props = $props();
 
-	const STATE_LABELS: Record<CellState, string> = {
-		idle: 'libre',
-		fog: 'inconnu',
-		miss: 'raté',
-		near: 'raté, troupe adverse à proximité',
-		hit: 'touché',
-		unmasked: 'troupe démasquée',
-		troop: 'votre troupe',
-		preview: 'aperçu du placement',
-		invalid: 'placement impossible'
-	};
-
 	const path = geoPath();
 
 	const shapes = $derived(
@@ -76,7 +65,7 @@
 	const isDisabled = (id: StateId) =>
 		typeof disabled === 'function' ? disabled(id) : (disabled?.has(id) ?? false);
 	const cellOf = (id: StateId): CellState => cells[id] ?? 'idle';
-	const ariaLabel = (id: StateId) => `${nameOf(id)} — ${STATE_LABELS[cellOf(id)]}`;
+	const ariaLabel = (id: StateId) => stateLabel(nameOf(id), cellOf(id));
 
 	let hovered = $state<StateId | null>(null);
 	let focused = $state<StateId | null>(null);
@@ -95,10 +84,19 @@
 		if (!c || vb.length < 4) return null;
 		return { x: ((c.x - vb[0]) / vb[2]) * 100, y: ((c.y - vb[1]) / vb[3]) * 100 };
 	});
-	// Single tab stop (roving tabindex): the last focused state, else the first.
+	// Single tab stop (roving tabindex): the last focused state, else the first enabled one.
 	const tabStop = $derived(
-		rovingId && shapes.some((s) => s.id === rovingId) ? rovingId : (shapes[0]?.id ?? null)
+		rovingTarget(
+			shapes.map((s) => s.id),
+			rovingId,
+			isDisabled
+		)
 	);
+
+	/** Focus the current roving tab stop (e.g. after the map was re-enabled). */
+	export function focusMap() {
+		if (tabStop) svgEl?.querySelector<SVGElement>(`[data-id="${tabStop}"]`)?.focus();
+	}
 
 	function select(id: StateId) {
 		if (interactive && !isDisabled(id)) onselect?.(id);
@@ -113,6 +111,7 @@
 		pointer = { x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100 };
 	}
 	function onKeydown(e: KeyboardEvent, id: StateId) {
+		if (!interactive) return;
 		if (e.key === 'Enter' || e.key === ' ') {
 			e.preventDefault();
 			select(id);
@@ -156,34 +155,34 @@
 		{#each shapes as s (s.id)}
 			{@const cell = cellOf(s.id)}
 			{@const off = isDisabled(s.id)}
-			{#if interactive}
-				<path
-					d={s.d}
-					data-id={s.id}
-					class="state {cell}"
-					class:off
-					class:hover={hovered === s.id}
-					role="button"
-					tabindex={tabStop === s.id ? 0 : -1}
-					aria-label={ariaLabel(s.id)}
-					aria-disabled={off || undefined}
-					onclick={() => select(s.id)}
-					onkeydown={(e) => onKeydown(e, s.id)}
-					onpointerenter={() => setHover(s.id)}
-					onpointerleave={() => setHover(null)}
-					onfocus={(e) => {
-						focused = s.id;
-						rovingId = s.id;
-						ringId = e.currentTarget.matches(':focus-visible') ? s.id : null;
-					}}
-					onblur={() => {
-						if (focused === s.id) focused = null;
-						if (ringId === s.id) ringId = null;
-					}}
-				/>
-			{:else}
-				<path d={s.d} data-id={s.id} class="state {cell}" aria-hidden="true" />
-			{/if}
+			<!-- One set of paths in both modes, so focus survives `interactive` flipping. -->
+			<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+			<path
+				d={s.d}
+				data-id={s.id}
+				class="state {cell}"
+				class:off={off && interactive}
+				class:hover={interactive && hovered === s.id}
+				role={interactive ? 'button' : 'img'}
+				tabindex={interactive && tabStop === s.id ? 0 : -1}
+				aria-label={ariaLabel(s.id)}
+				aria-disabled={interactive ? off || undefined : true}
+				onclick={() => select(s.id)}
+				onkeydown={(e) => onKeydown(e, s.id)}
+				onpointerenter={() => interactive && setHover(s.id)}
+				onpointerleave={() => interactive && setHover(null)}
+				onfocus={(e) => {
+					focused = s.id;
+					rovingId = s.id;
+					ringId = interactive && e.currentTarget.matches(':focus-visible') ? s.id : null;
+					if (interactive) onhover?.(s.id);
+				}}
+				onblur={() => {
+					if (focused === s.id) focused = null;
+					if (ringId === s.id) ringId = null;
+					if (interactive) onhover?.(null);
+				}}
+			/>
 		{/each}
 		{#if nationD}
 			<path d={nationD} class="nation" aria-hidden="true" />
@@ -216,21 +215,6 @@
 
 	{#if interactive && tipId && tipPos}
 		<div class="tip" style="left:{tipPos.x}%;top:{tipPos.y}%" aria-hidden="true">{nameOf(tipId)}</div>
-	{/if}
-
-	{#if interactive}
-		<ul class="sr-only">
-			{#each shapes as s (s.id)}
-				<li>
-					<button
-						type="button"
-						tabindex="-1"
-						disabled={isDisabled(s.id)}
-						onclick={() => select(s.id)}>{ariaLabel(s.id)}</button
-					>
-				</li>
-			{/each}
-		</ul>
 	{/if}
 </div>
 
@@ -364,17 +348,6 @@
 		white-space: nowrap;
 		pointer-events: none;
 		z-index: 2;
-	}
-	.sr-only {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		margin: -1px;
-		padding: 0;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
-		list-style: none;
 	}
 	@media (prefers-reduced-motion: reduce) {
 		.state {

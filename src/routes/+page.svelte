@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { page } from '$app/state';
 	import { session } from '$lib/game/session.svelte';
 	import { fr } from '$lib/content/fr';
@@ -11,6 +11,20 @@
 	import Motion from '$lib/motion/Motion.svelte';
 
 	onMount(() => session.init(page.url.searchParams));
+
+	// Move focus to the new screen's heading (not on the initial load).
+	let firstRun = true;
+	$effect(() => {
+		session.screen;
+		if (firstRun) {
+			firstRun = false;
+			return;
+		}
+		tick().then(() => {
+			const h = document.querySelector<HTMLElement>('main .screen-heading, main h1');
+			h?.focus({ preventScroll: true });
+		});
+	});
 </script>
 
 <svelte:head>
@@ -19,6 +33,7 @@
 
 <Motion />
 
+<main>
 {#if session.screen === 'home'}
 	<Home />
 {:else if session.screen === 'camp'}
@@ -30,3 +45,10 @@
 {:else}
 	<End />
 {/if}
+</main>
+
+<style>
+	:global(.screen-heading:focus:not(:focus-visible)) {
+		outline: none;
+	}
+</style>

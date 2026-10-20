@@ -27,9 +27,10 @@
 	<section class="end screen flex min-h-dvh flex-col gap-5">
 		<header class="end-header text-center">
 			<h1
-				class="end-title type-screen {won
+				class="end-title screen-heading type-screen {won
 					? ''
 					: 'text-(--red)'}"
+				tabindex="-1"
 				data-result={won ? 'win' : 'lose'}
 			>
 				{title}
@@ -48,14 +49,14 @@
 					>
 						<h3 class="type-panel">{nameOf(p)}</h3>
 						<dl class="mt-3 grid grid-cols-2 gap-x-4 gap-y-1">
-							<dt class="label-muted">{fr.end.statShots}</dt>
-							<dd class="stat-shots text-right font-semibold">{st.shots}</dd>
-							<dt class="label-muted">{fr.end.statHits}</dt>
-							<dd class="stat-hits text-right font-semibold">{st.hits}</dd>
-							<dt class="label-muted">{fr.end.statAccuracy}</dt>
-							<dd class="stat-accuracy text-right font-semibold">{percent(st.accuracy)}</dd>
-							<dt class="label-muted">{fr.end.statUnmasked}</dt>
-							<dd class="stat-unmasked text-right font-semibold">{st.unmasked}/3</dd>
+							<dt class="label-muted">{fr.end.statShots}<span class="sr-only"> : {st.shots}</span></dt>
+							<dd class="stat-shots text-right font-semibold" aria-hidden="true">{st.shots}</dd>
+							<dt class="label-muted">{fr.end.statHits}<span class="sr-only"> : {st.hits}</span></dt>
+							<dd class="stat-hits text-right font-semibold" aria-hidden="true">{st.hits}</dd>
+							<dt class="label-muted">{fr.end.statAccuracy}<span class="sr-only"> : {percent(st.accuracy)}</span></dt>
+							<dd class="stat-accuracy text-right font-semibold" aria-hidden="true">{percent(st.accuracy)}</dd>
+							<dt class="label-muted">{fr.end.statUnmasked}<span class="sr-only"> : {st.unmasked}/3</span></dt>
+							<dd class="stat-unmasked text-right font-semibold" aria-hidden="true">{st.unmasked}/3</dd>
 						</dl>
 					</article>
 				{/each}
