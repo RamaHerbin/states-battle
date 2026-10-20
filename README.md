@@ -4,6 +4,10 @@ Battleship on the American states. In the 18th century, France and Great Britain
 
 **Play:** [states-battle.vercel.app](https://states-battle.vercel.app)
 
+![A battle in progress: the enemy map with an unmasked troop in Wyoming and Colorado, near-miss hints around it, your own map, the troop trackers and the shot log](docs/battle.webp)
+
+<p align="center"><img src="docs/home.webp" width="49%" alt="Home screen: game mode, computer level, Jouer and Règles"></p>
+
 Made with [Aurore Vigneron](https://www.instagram.com/dawn_illu) (design, [Figma](https://www.figma.com/file/kipM6PJKbK3WdtWUDA5PZl/State-Battle-Game?type=design&node-id=3%3A3&mode=dev)), first as a one-day D3.js workshop at [Gobelins Paris](https://www.gobelins.fr/) in 2023, then finished in 2026.
 
 ## Rules
