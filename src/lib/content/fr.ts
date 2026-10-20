@@ -114,7 +114,7 @@ export const fr = {
 		home: "Retour à l'accueil"
 	},
 	credits: {
-		text: "« Conçu par Aurore Vigneron (design) et Rama Herbin (développement), à l'origine pendant un atelier D3.js aux Gobelins en 2023. »",
+		text: "Conçu par Aurore Vigneron (design) et Rama Herbin (développement), à l'origine pendant un atelier D3.js aux Gobelins en 2023.",
 		link: 'Voir le dépôt original de 2023'
 	}
 } as const;
