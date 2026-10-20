@@ -15,7 +15,7 @@
 		{fr.camp.back}
 	</button>
 
-	<h1 class="camp__title type-screen">{fr.camp.title}</h1>
+	<h1 class="camp__title screen-heading type-screen" tabindex="-1">{fr.camp.title}</h1>
 
 	<ul class="camp__list">
 		{#each camps as c}

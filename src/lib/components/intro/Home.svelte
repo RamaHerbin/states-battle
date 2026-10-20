@@ -32,7 +32,7 @@
 	</picture>
 
 	<div class="home__inner">
-		<h1 class="home__title type-hero">{fr.home.title}</h1>
+		<h1 class="home__title screen-heading type-hero" tabindex="-1">{fr.home.title}</h1>
 		<p class="home__pitch">{fr.home.pitch}</p>
 
 		<fieldset class="home__group">
