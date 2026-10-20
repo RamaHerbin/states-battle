@@ -1,0 +1,8 @@
+# Single-package repo; this file only carries pnpm settings.
+allowBuilds:
+  esbuild: true
+# pnpm 10 (Vercel's default for lockfile v9) reads this one instead.
+onlyBuiltDependencies:
+  - esbuild
+minimumReleaseAgeExclude:
+  - fancy-ui-svelte@0.16.0
