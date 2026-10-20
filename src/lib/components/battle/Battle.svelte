@@ -10,7 +10,6 @@
 	import TurnBanner from './TurnBanner.svelte';
 	import { campName, campOf, fmt, outcomeText } from './format';
 
-	let root = $state<HTMLElement>();
 	let enemyMap = $state<{ focusMap?: () => void }>();
 	let handoffButton = $state<HTMLButtonElement>();
 
@@ -69,7 +68,7 @@
 	const alreadyShot = (id: string) => session.enemyCellsView[id] !== 'fog';
 </script>
 
-<section bind:this={root} class="battle screen flex min-h-dvh flex-col gap-3">
+<section class="battle screen flex min-h-dvh flex-col gap-3">
 	<h1 class="screen-heading sr-only" tabindex="-1">{fr.battle.title}</h1>
 	<p class="outcome-live sr-only" role="status" aria-live="polite" aria-atomic="true">{announcement}</p>
 
