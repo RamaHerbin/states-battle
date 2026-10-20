@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { tick } from 'svelte';
 	import UsMap from '$lib/components/map/UsMap.svelte';
 	import { fr } from '$lib/content/fr';
 	import { session } from '$lib/game/session.svelte';
@@ -8,6 +9,28 @@
 	import Tracker from './Tracker.svelte';
 	import TurnBanner from './TurnBanner.svelte';
 	import { campName, campOf, fmt, outcomeText } from './format';
+
+	let enemyMap = $state<{ focusMap?: () => void }>();
+	let handoffButton = $state<HTMLButtonElement>();
+
+	// Keyboard focus follows the turn: back on the enemy map when it is the viewer's turn
+	// again, but only if focus was inside this screen or lost on <body>.
+	let couldFire = session.canFire;
+	$effect(() => {
+		const can = session.canFire;
+		if (can && !couldFire) {
+			tick().then(() => {
+				const a = document.activeElement;
+				if (!a || a === document.body) enemyMap?.focusMap?.();
+			});
+		}
+		couldFire = can;
+	});
+
+	// Result step (local mode): the button is the next stop for keyboard users.
+	$effect(() => {
+		if (session.handoff) handoffButton?.focus();
+	});
 
 	type Tab = 'enemy' | 'mine';
 	let tab = $state<Tab>('enemy');
@@ -46,12 +69,15 @@
 </script>
 
 <section class="battle screen flex min-h-dvh flex-col gap-3">
+	<h1 class="screen-heading sr-only" tabindex="-1">{fr.battle.title}</h1>
 	<p class="outcome-live sr-only" role="status" aria-live="polite" aria-atomic="true">{announcement}</p>
 
 	{#if session.passDevice}
 		<PassDevice
-			title={fmt(fr.battle.passDeviceTitle, { camp: campName(session.viewerCamp) })}
-			text={fr.battle.passDevice}
+			title={fmt(session.log.length === 0 ? fr.battle.startTitle : fr.battle.passDeviceTitle, {
+				camp: campName(session.viewerCamp)
+			})}
+			text={session.log.length === 0 ? undefined : fr.battle.passDevice}
 			camp={session.viewerCamp}
 			cta={fr.battle.passDeviceCta}
 			onconfirm={() => session.ackPassDevice()}
@@ -63,14 +89,18 @@
 			<p class="last-outcome rounded-md bg-white/10 px-3 py-1.5 text-base" aria-hidden="true">{announcement}</p>
 		{/if}
 
-		<div class="tabs flex gap-2 lg:hidden" role="tablist" aria-label="Cartes">
+		{#if session.handoff}
+			<button type="button" class="handoff btn btn--primary btn--lg" bind:this={handoffButton} onclick={() => session.finishTurn()}>
+				{fr.battle.handoffCta}
+			</button>
+		{/if}
+
+		<div class="tabs flex gap-2 lg:hidden" role="group" aria-label={fr.battle.tabs}>
 			{#each [['enemy', fr.battle.enemyMap], ['mine', fr.battle.yourMap]] as const as [id, label] (id)}
 				<button
 					type="button"
-					role="tab"
 					id="tab-{id}"
-					aria-selected={tab === id}
-					aria-controls="pane-{id}"
+					aria-pressed={tab === id}
 					class="tab min-h-11 flex-1 rounded-md border px-3 text-lg font-semibold {tab ===
 					id
 						? 'border-(--paper) bg-(--paper) text-(--navy)'
@@ -86,12 +116,11 @@
 			<div
 				id="pane-enemy"
 				class="pane enemy-pane min-w-0 max-w-full {tab === 'enemy' ? '' : 'max-lg:hidden'}"
-				role="tabpanel"
-				aria-labelledby="tab-enemy"
 			>
 				<h2 class="type-panel mb-1 hidden lg:block">{fr.battle.enemyMap}</h2>
 				<div class="map-wrap enemy-map min-w-0 max-w-full">
 					<UsMap
+						bind:this={enemyMap}
 						features={FEATURES}
 						nation={NATION}
 						viewBox={VIEWBOX}
@@ -109,8 +138,6 @@
 				<div
 					id="pane-mine"
 					class="pane mine-pane min-w-0 max-w-full {tab === 'mine' ? '' : 'max-lg:hidden'}"
-					role="tabpanel"
-					aria-labelledby="tab-mine"
 				>
 					<h2 class="type-panel mb-1 hidden lg:block">{fr.battle.yourMap}</h2>
 					<div class="map-wrap my-map mx-auto min-w-0 max-w-full">

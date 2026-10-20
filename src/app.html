@@ -38,13 +38,9 @@
 		/>
 		<meta name="twitter:image" content="https://states-battle.vercel.app/og.jpg" />
 
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-		<!-- Fonts of the 2023 Figma: Karantina for titles, Khand for text. -->
-		<link
-			rel="stylesheet"
-			href="https://fonts.googleapis.com/css2?family=Karantina:wght@400;700&family=Khand:wght@400;500;600&display=swap"
-		/>
+		<!-- Fonts of the 2023 Figma, self-hosted (see app.css): Karantina for titles, Khand for text. -->
+		<link rel="preload" href="/fonts/karantina-400-latin.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="/fonts/khand-400-latin.woff2" as="font" type="font/woff2" crossorigin />
 		<!-- Umami (stats.rama.app): add the script with this site's website id once created; see apps/exp/src/app.html for the pattern. -->
 		%sveltekit.head%
 	</head>
