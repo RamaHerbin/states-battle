@@ -1,23 +1,44 @@
 {
-  "name": "nuxt-app",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
-  },
-  "devDependencies": {
-    "@nuxt/devtools": "latest",
-    "nuxt": "^3.7.4",
-    "sass": "^1.68.0"
-  },
-  "dependencies": {
-    "d3": "^7.8.5",
-    "gsap": "file:gsap-bonus.tgz",
-    "normalize.css": "^8.0.1",
-    "topojson-client": "^3.1.0"
-  }
+	"name": "states-battle",
+	"description": "States Battle: France and Great Britain hide their troops across the American states; unmask the enemy's first.",
+	"homepage": "https://states-battle.vercel.app",
+	"private": true,
+	"version": "0.0.1",
+	"type": "module",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"prepare": "svelte-kit sync || echo ''",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"test": "vitest run"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-static": "^3.0.10",
+		"@sveltejs/kit": "^2.70.3",
+		"@sveltejs/vite-plugin-svelte": "^6.2.4",
+		"@tailwindcss/vite": "^4.1.0",
+		"@types/d3-geo": "^3.1.1",
+		"@types/d3-selection": "^3.0.12",
+		"@types/node": "^24.19.2",
+		"@types/topojson-client": "^3.1.5",
+		"@types/topojson-specification": "^1.0.5",
+		"svelte": "^5.51.0",
+		"svelte-check": "^4.4.2",
+		"tailwindcss": "^4.1.0",
+		"typescript": "^5.9.3",
+		"vite": "^7.3.1",
+		"vitest": "^4.1.10"
+	},
+	"dependencies": {
+		"d3-geo": "^3.1.1",
+		"d3-selection": "^3.0.0",
+		"fancy-ui-svelte": "^0.16.0",
+		"gsap": "^3.14.2",
+		"topojson-client": "^3.1.0"
+	},
+	"packageManager": "pnpm@11.5.1",
+	"engines": {
+		"node": ">=22"
+	}
 }
